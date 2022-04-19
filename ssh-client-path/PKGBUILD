@@ -1,0 +1,14 @@
+pkgname=ssh-client-path
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="append path used only for ssh client"
+arch=(any)
+# url=""
+license=(WTFPL)
+source=("$pkgname".sh)
+md5sums=('SKIP')
+
+package() {
+	cd "$srcdir"
+	install -D "$pkgname".sh "$pkgdir"/etc/profile.d/"$pkgname".sh
+}
