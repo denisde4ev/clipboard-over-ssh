@@ -1,0 +1,15 @@
+#!/bin/sh
+
+printf %s\\n "$@" > "${XDG_CACHE_HOME:-$HOME/.cache}"/clipboard-over-ssh/ssh-conected--$$ ||:
+
+ssh "$@"
+
+if YN_confirm -S n "Do you want to get the last copyed text from the connected session?"; then
+	ssh "$@" -- 'cat "${XDG_CACHE_HOME:-$HOME/.cache}"/clipboard-over-ssh/ssh-clipboard--"${SSH_CLIENT%%" "*}"' | {
+		exec ${CLIPBOARD_OVER_SSH__SET_CLIPBOARD_COMMAND:-'$' 'cin'}
+	}
+fi
+
+rm "${XDG_CACHE_HOME:-$HOME/.cache}"/clipboard-over-ssh/ssh-conected--$$ ||:
+
+# ssh-connect-remembor-clipboard

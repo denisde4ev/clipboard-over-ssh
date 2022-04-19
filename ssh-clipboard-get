@@ -1,0 +1,8 @@
+#!/bin/sh
+
+case ${SSH_CLIENT:+x} in x)
+	printf %s\\n >&2 "${0##*/}: missing SSH_CLIENT var in the env," "this command should be used only in ssh conected terminal";
+	exit 1;
+esac
+
+cat   "${XDG_CACHE_HOME:-$HOME/.cache}"/clipboard-over-ssh/ssh-clipboard--"${SSH_CLIENT%%" "*}"
