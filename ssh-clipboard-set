@@ -1,6 +1,6 @@
 #!/bin/sh
 
-case ${SSH_CLIENT:+x} in x)
+case ${SSH_CLIENT:+x} in '')
 	printf %s\\n >&2 "${0##*/}: missing SSH_CLIENT var in the env," "this command should be used only in ssh conected terminal";
 	exit 1;
 esac
