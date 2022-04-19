@@ -3,17 +3,38 @@
 # (wont parse arguments for ssh, wont show warning)
 # IT IS EXPECTED ARGUMENTS TO NOT EXECUTE ANY COMMANDS IN THE SSH SESSION, -> AND DROP TO CONNECTED SSH SHELL.
 
+case $1 in --help) echo >&2 "todo: help message"; exit 1; esac
+
+case $# in 0) ;; *)
+	exec ssh "$@" -- 'cat "${XDG_CACHE_HOME:-$HOME/.cache}"/clipboard-over-ssh/ssh-clipboard--"${SSH_CLIENT%%" "*}"'
+esac
+
 dir_nprefix="${XDG_CACHE_HOME:-$HOME/.cache}"/clipboard-over-ssh/ssh-conected--
+
+(
+	# Detect if any files exist:
+	set -- "$dir_nprefix"*
+	if ! [ -f "$1" ]; then
+		case $1 in
+			"${dir_nprefix}*") printf %s\\n >&2 "no remembered connections";;
+			*) printf %s\\n "unexpected error, got files but first one does not exist:" "$@" >&2; exit 2;;
+		esac
+		exit 1
+	fi
+
+) || exit
 
 for i in "$dir_nprefix"*; do
 	parent_ssh_pid=${i#"$dir_nprefix"}
 	if [ -d "proc/$parent_ssh_pid" ] || ps -h -o 'pid' -p "$parent_ssh_pid" 1>/dev/null; then
-		printf %s\\n "$i"
+		printf %s\\n "$parent_ssh_pid"
 	else
-		rm -v "$i" # yes, verbose. those files should not exists without pid
+		rm -v "$i" >&2 # yes, verbose. those files should not exists without pid
 	fi
 done | {
-	args_file=$dir_nprefix$(fzf) || exit
+	args_file=$(fzf) || exit
+	case $args_file in '') exit 1; esac
+	args_file=$dir_nprefix$args_file
 
 	set --
 	IFS=''

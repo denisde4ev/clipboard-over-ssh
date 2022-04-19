@@ -2,13 +2,21 @@
 
 printf %s\\n "$@" > "${XDG_CACHE_HOME:-$HOME/.cache}"/clipboard-over-ssh/ssh-conected--$$ ||:
 
-ssh "$@"
-
-if YN_confirm -S n "Do you want to get the last copyed text from the connected session?"; then
-	ssh "$@" -- 'cat "${XDG_CACHE_HOME:-$HOME/.cache}"/clipboard-over-ssh/ssh-clipboard--"${SSH_CLIENT%%" "*}"' | {
-		exec ${CLIPBOARD_OVER_SSH__SET_CLIPBOARD_COMMAND:-'$' 'cin'}
-	}
+if YN_confirm n "Do you want to reset wast remote clipboard file on remote ssh for your ip"; then
+	ssh "$@" -- 'rm "${XDG_CACHE_HOME:-$HOME/.cache}"/clipboard-over-ssh/ssh-clipboard--"${SSH_CLIENT%%" "*}"'
 fi
+
+ssh "$@" && {
+
+	case ${CLIPBOARD_OVER_SSH__SET_CLIPBOARD_COMMAND+x} in x)
+		if YN_confirm -S n "Do you want to get the last copyed text from the connected session?"; then
+			ssh "$@" -- 'cat "${XDG_CACHE_HOME:-$HOME/.cache}"/clipboard-over-ssh/ssh-clipboard--"${SSH_CLIENT%%" "*}"' | {
+				exec ${CLIPBOARD_OVER_SSH__SET_CLIPBOARD_COMMAND:-'$' 'cin'}
+			}
+		fi
+	esac
+
+}
 
 rm "${XDG_CACHE_HOME:-$HOME/.cache}"/clipboard-over-ssh/ssh-conected--$$ ||:
 
