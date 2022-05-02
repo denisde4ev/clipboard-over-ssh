@@ -5,4 +5,4 @@ case ${SSH_CLIENT:+x} in '')
 	exit 1;
 esac
 
-cat > "${XDG_CACHE_HOME:-$HOME/.cache}"/clipboard-over-ssh/ssh-clipboard--"${SSH_CLIENT%%" "*}"
+exec cat > "${XDG_CACHE_HOME:-$HOME/.cache}"/clipboard-over-ssh/ssh-clipboard--"${SSH_CLIENT%%" "*}"
