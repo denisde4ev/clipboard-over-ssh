@@ -1,14 +1,14 @@
 # clipboard-over-ssh
-copy clipboard command from the remote clipboard (ment to be used with micro editor).
+copy clipboard command from the remote clipboard (meant to be used with micro editor).
 - This is not for real time syncing clipboard.
-- This is ment to be used for terminal piping (not GUI session), mainly for micro text editor clipboard.
+- This is meant to be used for terminal piping (not GUI session), mainly for micro text editor clipboard.
 - Works by reading and writing file ~/.cache/clipboard-over-ssh/ssh-clipboard--((SSH CLIENT IP))
 
 ## How does it work?
 
 `clipboard-over-ssh` needs to be installed to the remote PC.
 
-Connect to remote ssh and coppy something. (Copy by piping it to ssh-clipboard-set)
+Connect to remote ssh and copy something. (Copy by piping it to ssh-clipboard-set)
 
 And then get it from remote to your terminal.
 
@@ -42,7 +42,7 @@ git clone https://github.com/denisde4ev/clipboard-over-ssh.git && cd clipboard-o
 makepkg -i
 ```
 
-manualy:
+manually:
 ``` shell
 git clone https://github.com/denisde4ev/clipboard-over-ssh.git && cd clipboard-over-ssh
 cp -vi \
@@ -54,7 +54,7 @@ cp -vi \
 ;
 ```
 
-manualy with wget:
+manually with wget:
 ``` shell
 cd /usr/local/bin/
 for i in ssh-clipboard-get ssh-clipboard-set ssh-connect-with-clipboard ssh-get-from-connected-with-clipboard-fzf; do
@@ -70,4 +70,4 @@ done
 
 ## note for micro editor integration:
 This provides commands: `ssh-clipboard-get`/`ssh-clipboard-set` to integrate with micro text editor.<br>
-This is NOT ment to be installed on Termux!
+This is NOT meant to be installed on Termux!
